@@ -8,22 +8,40 @@
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/night.css">
+		<link rel="stylesheet" href="dist/theme/white.css">
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<style>
+			:root {
+				--r-main-font: Calibri, sans-serif;
+				--r-heading-font: Calibri, sans-serif;
+			}
+
+			.two-columns-eq {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				grid-gap: 0 1em;
+			}
+
+			.two-columns-eq > * {
+				overflow: hidden;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
+
 				<section data-background-image="/images/nuvoton-zhubei-building.jpg"
 				         data-background-position="right"
 				         data-background-size="contain">
-					<h2 style="text-align: left;">CMake 101</h2>
+					<h1 style="text-align: left;">CMake 101</h1>
 					<br>
 					<h6 style="text-align: left;">Pin-Hao Chen</h6>
 					<h6 style="text-align: left;">2025/04/30</h6>
 				</section>
+
 				<section>
 					<h3>Outline</h3>
 					<ul>
@@ -32,6 +50,160 @@
 						<li>Demo</li>
 					</ul>
 				</section>
+
+				<section>
+					<h3>What is CMake?</h3>
+					<ul class="fragment fade-up">
+						<li class="fragment fade-up">CMake is meta-build system.</li>
+						<li class="fragment fade-up">CMake create configuration files for a build system.</li>
+						<li class="fragment fade-up">Examples of build system:
+							<ul>
+								<li class="fragment fade-up">Unix Makefiles</li>
+								<li class="fragment fade-up">NMake Makefiles</li>
+								<li class="fragment fade-up">Ninja</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3 class="r-fit-text">CMake Basics</h3>
+				</section>
+
+				<section>
+					<p>Let's take a look at out CMake Project Structure:</p>
+					<pre><code data-trim class="language-cmake">
+						cortex-m-cmake-demo/
+						    library/
+						        bsp/
+						        CMakeLists.txt
+						    source/
+						        main.c
+						    armclang.cmake
+						    CMakeLists.txt
+					</code>
+					
+				</section>
+
+				<section>
+					<h3>The minimum version</h3>
+					<pre><code data-trim class="language-cmake">
+						cmake_minimum_required(VERSION 3.21)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">
+						It decides the features that can be used.
+					</p>
+					<p class="fragment fade-up">
+						It dictates the <a href="https://cmake.org/cmake/help/latest/manual/cmake-policies.7.html#manual:cmake-policies(7)">policies</a>,
+						which introduce behavior changes while preserving backward compatibility.
+					</p>
+				</section>
+
+				<section>
+					<h3>Project declaration</h3>
+					<pre><code data-trim class="language-cmake">
+						project(demo
+							VERSION 1.0.0
+							DESCRIPTION "This is a demo project"
+						)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">The <code>project()</code> call sets up the project name.</p>
+					<p class="fragment fade-up">The project name is stored in <code>PROJECT_NAME</code>.</p>
+				</section>
+
+				<section>
+					<h3>Language Setting</h3>
+					<pre><code data-trim class="language-cmake">
+						enable_language(C ASM)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">We are going to use C and Assembly for this project.</p>
+				</section>
+
+				<section>
+					<h3>Language Setting</h3>
+					<pre><code data-trim class="language-cmake">
+						set(CMAKE_C_STANDARD 11)
+						set(CMAKE_C_STANDARD_REQUIRED ON)
+						set(CMAKE_C_EXTENSIONS OFF)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">
+						It specifies the language standard to compile for<br>
+						i.e. <code>-std=c11</code>
+					</p>
+					<p class="fragment fade-up">
+						The default is <code>gnu11</code>, which may cause different behavior in ARMClang.
+					</p>
+				</section>
+
+				<section>
+					<h3>CMake Toolchain File</h3>
+					<pre><code data-trim class="language-cmake">
+						set(CMAKE_SYSTEM_NAME Generic)
+					</code></pre>
+					<small>armclang.cmake</small>
+					<br>
+					<p class="fragment fade-up">It indicates we are cross-compiling for bare metal embedded devices.</p>
+				</section>
+
+				<section>
+					<h3>CMake Toolchain File</h3>
+					<pre><code data-trim class="language-cmake">
+						set(CMAKE_ASM_COMPILER "armclang")
+						set(CMAKE_CXX_COMPILER "armclang")
+						set(CMAKE_C_COMPILER "armclang")
+						
+						set(CMAKE_AR "armar")
+						set(ARM_ELF2BIN "fromelf")
+					</code></pre>
+					<small>armclang.cmake</small>
+					<br>
+					<p class="fragment fade-up">The compilers to use for ASM and C</p>
+				</section>
+
+				<section>
+					<h3>CMake Toolchain File</h3>
+					<pre><code data-trim class="language-cmake">
+						set(CMAKE_C_COMPILER_TARGET arm-arm-none-eabi)
+					</code></pre>
+					<small>armclang.cmake</small>
+					<br>
+					<p class="fragment fade-up">This will cause CMake to add the <code>--target</code> flag.</p>
+				</section>
+
+				<section>
+					<h3>CMake Toolchain File</h3>
+					<!-- flags e.g. CMAKE_C_FLAGS_INIT -->
+				</section>
+
+				<section>
+					<h3>CMake Toolchain File</h3>
+					<pre><code data-trim class="language-cmake">
+						set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+					</code></pre>
+					<small>armclang.cmake</small>
+					<br>
+					<p class="fragment fade-up">Whenever CMake starts it tries to compile a sample program.</p>
+					<p class="fragment fade-up">Using <code>STATIC_LIBRARY</code> avoids running the linker.</p>
+				</section>
+
+				<section>
+					<h3>Adding BSP library</h3>
+					<pre><code data-trim class="language-cmake">
+						add_subdirectory(library)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">The CMakeLists file contained in that subdirectory is evaluated.</p>
+					<blockquote class="fragment fade-up">
+						The CMakeLists in the subdirectory create a static library called <strong style="color: darkred;">bsp</strong>.
+						We will discuss how to add a static library in the future.
+					</blockquote>
+				</section>
+
+				<!-- set(EXECUTABLE ${PROJECT_NAME}) -->
 			</div>
 		</div>
 		<script src="dist/reveal.js"></script>
