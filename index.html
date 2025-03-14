@@ -16,16 +16,31 @@
 			:root {
 				--r-main-font: Calibri, sans-serif;
 				--r-heading-font: Calibri, sans-serif;
+				--r-link-color:#E7290F;
+				--r-link-color-dark: #AD1E08;
+				--r-link-color-hover: #F3543F;
+				--r-selection-background-color: #F46552;
+				--r-selection-color: #fff;
 			}
 
-			.two-columns-eq {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				grid-gap: 0 1em;
+			.title {
+				clear: right;
 			}
 
-			.two-columns-eq > * {
-				overflow: hidden;
+			.current-file {
+				float:right;
+				padding: 4px 8px;
+				color: white;
+				margin-top: 10px;
+				font-size:large;
+			}
+
+			.current-file.toplevel {
+				background-color: #B88100;
+			}
+
+			.current-file.toolchain {
+				background-color: #035E7B;
 			}
 		</style>
 	</head>
@@ -46,9 +61,19 @@
 					<h3>Outline</h3>
 					<ul>
 						<li>What is CMake?</li>
-						<li>CMake Basics</li>
+						<li>
+							CMake Basics
+							<ul>
+								<li>Top Level File</li>
+								<li>Toolchain File</li>
+							</ul>
+						</li>
 						<li>Demo</li>
 					</ul>
+				</section>
+
+				<section data-background-gradient="linear-gradient(to bottom, #E7290F, #F57666)">
+					<h3 class="r-fit-text" style="color: white;">What is CMake?</h3>
 				</section>
 
 				<section>
@@ -66,12 +91,12 @@
 					</ul>
 				</section>
 
-				<section>
-					<h3 class="r-fit-text">CMake Basics</h3>
+				<section data-background-gradient="linear-gradient(to bottom, #E7290F, #F57666)">
+					<h3 class="r-fit-text" style="color: white;">CMake Basics</h3>
 				</section>
 
 				<section>
-					<p>Let's take a look at out CMake Project Structure:</p>
+					<p>Let's take a look at our CMake Project Structure:</p>
 					<pre><code data-trim class="language-cmake">
 						cortex-m-cmake-demo/
 						    library/
@@ -82,11 +107,12 @@
 						    armclang.cmake
 						    CMakeLists.txt
 					</code>
-					
+
 				</section>
 
 				<section>
-					<h3>The minimum version</h3>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">The minimum version</h3>
 					<pre><code data-trim class="language-cmake">
 						cmake_minimum_required(VERSION 3.21)
 					</code></pre>
@@ -101,7 +127,8 @@
 				</section>
 
 				<section>
-					<h3>Project declaration</h3>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Project declaration</h3>
 					<pre><code data-trim class="language-cmake">
 						project(demo
 							VERSION 1.0.0
@@ -114,7 +141,8 @@
 				</section>
 
 				<section>
-					<h3>Language Setting</h3>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Language Setting</h3>
 					<pre><code data-trim class="language-cmake">
 						enable_language(C ASM)
 					</code></pre>
@@ -123,7 +151,8 @@
 				</section>
 
 				<section>
-					<h3>Language Setting</h3>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Language Setting</h3>
 					<pre><code data-trim class="language-cmake">
 						set(CMAKE_C_STANDARD 11)
 						set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -140,58 +169,72 @@
 				</section>
 
 				<section>
-					<h3>CMake Toolchain File</h3>
+					<div class="current-file toolchain">Toolchain File</div>
+					<h3 class="title">armclang.cmake</h3>
 					<pre><code data-trim class="language-cmake">
 						set(CMAKE_SYSTEM_NAME Generic)
 					</code></pre>
-					<small>armclang.cmake</small>
 					<br>
 					<p class="fragment fade-up">It indicates we are cross-compiling for bare metal embedded devices.</p>
 				</section>
 
 				<section>
-					<h3>CMake Toolchain File</h3>
+					<div class="current-file toolchain">Toolchain File</div>
+					<h3 class="title">armclang.cmake</h3>
 					<pre><code data-trim class="language-cmake">
 						set(CMAKE_ASM_COMPILER "armclang")
 						set(CMAKE_CXX_COMPILER "armclang")
 						set(CMAKE_C_COMPILER "armclang")
-						
+
 						set(CMAKE_AR "armar")
 						set(ARM_ELF2BIN "fromelf")
 					</code></pre>
-					<small>armclang.cmake</small>
 					<br>
 					<p class="fragment fade-up">The compilers to use for ASM and C</p>
 				</section>
 
 				<section>
-					<h3>CMake Toolchain File</h3>
+					<div class="current-file toolchain">Toolchain File</div>
+					<h3 class="title">armclang.cmake</h3>
 					<pre><code data-trim class="language-cmake">
 						set(CMAKE_C_COMPILER_TARGET arm-arm-none-eabi)
 					</code></pre>
-					<small>armclang.cmake</small>
 					<br>
 					<p class="fragment fade-up">This will cause CMake to add the <code>--target</code> flag.</p>
 				</section>
 
 				<section>
-					<h3>CMake Toolchain File</h3>
-					<!-- flags e.g. CMAKE_C_FLAGS_INIT -->
+					<div class="current-file toolchain">Toolchain File</div>
+					<h3 class="title">armclang.cmake</h3>
+					<pre><code data-trim class="language-cmake">
+						set(CMAKE_C_FLAGS_INIT "-mthumb -fdata-sections -fno-exceptions -g ")
+						set(CMAKE_ASM_FLAGS_INIT "-mthumb -masm=auto --target=arm-arm-none-eabi -g")
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">
+						CMake offer a variable cache. <a href="https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#cmake-language-variables">The official manual </a>
+						describes how CMake searches for variables.
+					</p>
+					<p class="fragment fade-up">
+						<code>CMAKE_&lt;LANG&gt;_FLAGS_INIT</code> initialize the <code>CMAKE_&lt;LANG&gt;_FLAGS</code> cache entry.
+						It is meant to be set by a toolchain file.
+					</p>
 				</section>
 
 				<section>
-					<h3>CMake Toolchain File</h3>
+					<div class="current-file toolchain">Toolchain File</div>
+					<h3 class="title">armclang.cmake</h3>
 					<pre><code data-trim class="language-cmake">
 						set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 					</code></pre>
-					<small>armclang.cmake</small>
 					<br>
 					<p class="fragment fade-up">Whenever CMake starts it tries to compile a sample program.</p>
 					<p class="fragment fade-up">Using <code>STATIC_LIBRARY</code> avoids running the linker.</p>
 				</section>
 
 				<section>
-					<h3>Adding BSP library</h3>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Adding BSP library</h3>
 					<pre><code data-trim class="language-cmake">
 						add_subdirectory(library)
 					</code></pre>
@@ -203,9 +246,193 @@
 					</blockquote>
 				</section>
 
-				<!-- set(EXECUTABLE ${PROJECT_NAME}) -->
+				<section>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Adding the Executable</h3>
+					<pre><code data-trim class="language-cmake">
+						set(EXECUTABLE ${PROJECT_NAME})
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">This creates a variable containing the executable name.</p>
+				</section>
+
+				<section>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Adding the Executable</h3>
+					<pre><code data-trim class="language-cmake">
+						add_executable(${EXECUTABLE}
+							source/main.c
+						)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">The <strong>executable target</strong> is added here.</p>
+				</section>
+
+				<section>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Chain targets</h3>
+					<pre><code data-trim class="language-cmake">
+						target_link_libraries(${EXECUTABLE}
+							PRIVATE
+								bsp
+						)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">We link the bsp libraries to the executable.</p>
+					<p class="fragment fade-up">PRIVATE is used since the executable is the topmost product.</p>
+				</section>
+
+
+				<section data-auto-animate>
+					<h3>Understanding Scope</h3>
+					<div style="display: grid; grid-template-columns: 1fr 1fr">
+						<div>
+							<pre data-id="code-animation"><code data-trim class="language-cmake" style="font-size: large;">
+								# Focus on CortexM23Lib here
+								target_link_libraries(CortexM23Lib
+									PUBLIC
+										CortexMLib
+								)
+							</code></pre>
+						</div>
+						<div style="font-size: x-large;">
+							<div>
+								<ul><strong>Current Targets</strong> (CortexM23Lib)
+									<li>Can use symbols (functions, variables, etc.) from CortexMLib</li>
+									<li>Inherits include directories, compile definitions, and link libraries</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section data-auto-animate>
+					<h3>Understanding Scope</h3>
+					<div style="display: grid; grid-template-columns: 1fr 1fr">
+						<div>
+							<pre data-id="code-animation"><code data-trim class="language-cmake" style="font-size: large;">
+								# Focus on CortexM23Lib here
+								target_link_libraries(CortexM23Lib
+									PUBLIC
+										CortexMLib
+								)
+
+								target_link_libraries(M2354Lib
+									PUBLIC
+										CortexM23Lib
+								)
+
+								target_link_libraries(M2351Lib
+									PUBLIC
+										CortexM23Lib
+								)
+							</code></pre>
+						</div>
+						<div style="display: grid; font-size: x-large; padding-top: 1rem; padding-bottom: 1rem; grid-template-rows: 1fr 1fr;">
+							<div>
+								<ul><strong>Current Targets</strong> (CortexM23Lib)
+									<li>Can use symbols (functions, variables, etc.) from CortexMLib</li>
+									<li>Inherits include directories, compile definitions, and link libraries</li>
+								</ul>
+							</div>
+							<div>
+								<ul><strong>Dependent Targets</strong> (M2354Lib, M2351Lib)
+									<li>Automatically get the link dependency on CortexMLib</li>
+									<li>Also inherit include directories, compile definitions, and link libraries</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Understanding Scope</h3>
+					<table>
+						<thead>
+							<tr>
+								<th>Scope</th>
+								<th>Applies to Current Target</th>
+								<th>Applies to Dependent Target</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>PUBLIC</td>
+								<td>✅ Used by current target</td>
+								<td>✅ Propagate up to dependent targets</td>
+							</tr>
+							<tr>
+								<td>PRIVATE</td>
+								<td>✅ Used by current target</td>
+								<td>❌ Not propagated</td>
+							</tr>
+							<tr>
+								<td>INTERFACE</td>
+								<td>❌ Not used by current target</td>
+								<td>✅ Propagate up to dependent targets</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Linker Option</h3>
+					<pre><code data-trim class="language-cmake">
+						target_link_options(${EXECUTABLE}
+							PRIVATE
+								--library_type=microlib
+								--scatter=${CMAKE_CURRENT_SOURCE_DIR}/scatter/m2354.sct
+								--map
+						)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">Put link flags for our executable</p>
+					<p class="fragment fade-up">
+						We need to provide scatter file (linker script).
+						It tells the linker where to store the objects in memory.
+					</p>
+				</section>
+
+				<section>
+					<div class="current-file toplevel">Top Level File</div>
+					<h3 class="title">Post-build commands</h3>
+					<pre><code data-trim class="language-cmake">
+						add_custom_command(TARGET ${EXECUTABLE}
+							POST_BUILD
+							COMMAND ${ARM_ELF2BIN} --bin ${EXECUTABLE}.elf --output ${EXECUTABLE}.bin
+						)
+					</code></pre>
+					<br>
+					<p class="fragment fade-up">This creates a custom command to generate binary file.</p>
+				</section>
+
+				<section data-background-gradient="linear-gradient(to bottom, #E7290F, #F57666)">
+					<h3 class="r-fit-text" style="color: white;">Demo</h3>
+				</section>
+
+				<section>
+					<h3>Reference</h3>
+					<br>
+					<ul>
+						<li><a href="https://cliutils.gitlab.io/modern-cmake/README.html" style="color:dimgrey;">
+							An Introdution to Modern CMake
+						</a></li>
+						<li><a href="https://dnedic.github.io/blog/the-most-thoroughly-commented-embedded-cmakelists/" style="color:dimgrey;">
+							The most thoroughly commented embedded CMakeLists file
+						</a></li>
+						<li><a href="https://cmake.org/cmake/help/latest/index.html" style="color:dimgrey;">
+							CMake Reference Documentation
+						</a></li>
+					</ul>
+				</section>
+
+				<section data-background-color="#E7290F">
+					<h3 style="text-align: right;">Thank You</h3>
+				</section>
 			</div>
 		</div>
+
 		<script src="dist/reveal.js"></script>
 		<script src="plugin/notes/notes.js"></script>
 		<script src="plugin/markdown/markdown.js"></script>
