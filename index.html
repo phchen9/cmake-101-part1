@@ -33,6 +33,12 @@
 				font-size: 1em;
 			}
 
+			.githubcode {
+				border: 1px solid #ddd;
+				background-color: #f8f8f8;
+				border-radius: 3px;
+			}
+
 			.basics > pre > code {
 				margin-top: 2em;
 				margin-bottom: 3em;
@@ -149,8 +155,8 @@
 							DESCRIPTION "This is a demo project"
 						)
 					</code></pre>
-					<p class="fragment fade-up">The <code>project()</code> call sets up the project name.</p>
-					<p class="fragment fade-up">The project name is stored in <code>PROJECT_NAME</code>.</p>
+					<p class="fragment fade-up">The <code class="githubcode">project()</code> call sets up the project name.</p>
+					<p class="fragment fade-up">The project name is stored in <code class="githubcode">PROJECT_NAME</code>.</p>
 				</section>
 
 				<section class="basics">
@@ -173,10 +179,10 @@
 					</code></pre>
 					<p class="fragment fade-up">
 						It specifies the language standard to compile for<br>
-						i.e. <code>-std=c11</code>
+						i.e. <code class="githubcode">-std=c11</code>
 					</p>
 					<p class="fragment fade-up">
-						The default is <code>gnu11</code>, which may cause different behavior in ARMClang.
+						The default is <code class="githubcode">gnu11</code>, which may cause different behavior in ARMClang.
 					</p>
 				</section>
 
@@ -209,7 +215,7 @@
 					<pre><code data-trim class="language-cmake">
 						set(CMAKE_C_COMPILER_TARGET arm-arm-none-eabi)
 					</code></pre>
-					<p class="fragment fade-up">This will cause CMake to add the <code>--target</code> flag.</p>
+					<p class="fragment fade-up">This will cause CMake to add the <code class="githubcode">--target</code> flag.</p>
 				</section>
 
 				<section class="basics">
@@ -224,7 +230,7 @@
 						describes how CMake searches for variables.
 					</p>
 					<p class="fragment fade-up">
-						<code>CMAKE_&lt;LANG&gt;_FLAGS_INIT</code> initialize the <code>CMAKE_&lt;LANG&gt;_FLAGS</code> cache entry.
+						<code class="githubcode">CMAKE_&lt;LANG&gt;_FLAGS_INIT</code> initialize the <code class="githubcode">CMAKE_&lt;LANG&gt;_FLAGS</code> cache entry.
 						It is meant to be set by a toolchain file.
 					</p>
 				</section>
@@ -236,7 +242,7 @@
 						set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 					</code></pre>
 					<p class="fragment fade-up">Whenever CMake starts it tries to compile a sample program.</p>
-					<p class="fragment fade-up">Using <code>STATIC_LIBRARY</code> avoids running the linker.</p>
+					<p class="fragment fade-up">Using <code class="githubcode">STATIC_LIBRARY</code> avoids running the linker.</p>
 				</section>
 
 				<section class="basics">
@@ -298,10 +304,10 @@
 								)
 							</code></pre>
 						</div>
-						<div style="font-size: x-large;">
+						<div style="font-size: .6em;">
 							<div>
-								<ul><strong>Current Targets</strong> (CortexM23Lib)
-									<li>Can use symbols (functions, variables, etc.) from CortexMLib</li>
+								<ul><strong>Current Targets</strong> (<code class="githubcode">CortexM23Lib</code>)
+									<li>Can use symbols (functions, variables, etc.) from <code class="githubcode">CortexMLib</code></li>
 									<li>Inherits include directories, compile definitions, and link libraries</li>
 								</ul>
 							</div>
@@ -331,16 +337,16 @@
 								)
 							</code></pre>
 						</div>
-						<div style="display: grid; font-size: x-large; padding-top: 1rem; padding-bottom: 1rem; grid-template-rows: 1fr 1fr;">
+						<div style="display: grid; font-size: .6em; padding-top: 1rem; padding-bottom: 1rem; grid-template-rows: 1fr 1fr;">
 							<div>
-								<ul><strong>Current Targets</strong> (CortexM23Lib)
-									<li>Can use symbols (functions, variables, etc.) from CortexMLib</li>
+								<ul><strong>Current Targets</strong> (<code class="githubcode">CortexM23Lib</code>)
+									<li>Can use symbols (functions, variables, etc.) from <code class="githubcode">CortexMLib</code></li>
 									<li>Inherits include directories, compile definitions, and link libraries</li>
 								</ul>
 							</div>
 							<div>
-								<ul><strong>Dependent Targets</strong> (M2354Lib, M2351Lib)
-									<li>Automatically get the link dependency on CortexMLib</li>
+								<ul><strong>Dependent Targets</strong> (<code class="githubcode">M2354Lib</code>, <code class="githubcode">M2351Lib</code>)
+									<li>Automatically get the link dependency on <code class="githubcode">CortexMLib</code></li>
 									<li>Also inherit include directories, compile definitions, and link libraries</li>
 								</ul>
 							</div>
